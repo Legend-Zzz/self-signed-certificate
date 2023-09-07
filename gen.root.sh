@@ -13,8 +13,8 @@ SERIAL_NUMBER="$DEFAULT_SERIAL_NUMBER"
 # Define other variables
 SCRIPT_DIR="$(dirname "${BASH_SOURCE[0]}")"
 OUT_DIR="$SCRIPT_DIR/out"
-ROOT_KEY="$OUT_DIR/root.key.pem"
-ROOT_CERT="$OUT_DIR/root.crt"
+ROOT_KEY_FILE="$OUT_DIR/root.key.pem"
+ROOT_CRT_FILE="$OUT_DIR/root.crt"
 CA_CONFIG="ca.cnf"
 INDEX_FILE="$OUT_DIR/index.txt"
 ATTR_FILE="$OUT_DIR/index.txt.attr"
@@ -51,9 +51,9 @@ file_exists() {
 }
 
 # Function to generate the root certificate and key
-generate_root_cert() {
+generate_ROOT_CRT_FILE() {
     # Check if root certificate already exists
-    if file_exists "$ROOT_CERT"; then
+    if file_exists "$ROOT_CRT_FILE"; then
         echo "######### Root certificate already exists, skip generating root certificate #########"
         return
     fi
@@ -63,8 +63,8 @@ generate_root_cert() {
 
     # Generate root cert along with root key
     openssl req -config "$CA_CONFIG" \
-        -newkey rsa:4096 -nodes -keyout "$ROOT_KEY" \
-        -new -x509 -days "$VALID_DAYS" -out "$ROOT_CERT" \
+        -newkey rsa:4096 -nodes -keyout "$ROOT_KEY_FILE" \
+        -new -x509 -days "$VALID_DAYS" -out "$ROOT_CRT_FILE" \
         -subj "$ROOT_CA_SUBJECT"
     
     echo "Root certificate generated."
@@ -73,4 +73,4 @@ generate_root_cert() {
 # Main script execution
 cd "$SCRIPT_DIR"
 init_out_directory
-generate_root_cert
+generate_ROOT_CRT_FILE
