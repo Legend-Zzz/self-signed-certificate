@@ -15,7 +15,7 @@ SCRIPT_DIR="$(dirname "${BASH_SOURCE[0]}")"
 OUT_DIR="$SCRIPT_DIR/out"
 CSR_FILE="${OUT_DIR}/server.csr.pem"
 CRT_FILE="${OUT_DIR}/server.crt"
-SERVER_KEY="${OUT_DIR}/server.key.pem"
+KEY_FILE="${OUT_DIR}/server.key.pem"
 BUNDLE_CRT_FILE="${OUT_DIR}/server.bundle.crt"
 ROOT_CRT_FILE="${OUT_DIR}/root.crt"
 ROOT_KEY_FILE="${OUT_DIR}/root.key.pem"
@@ -31,13 +31,15 @@ generate_root_cert() {
     if ! file_exists "$ROOT_CRT_FILE"; then
         local options="-s \"$ROOT_CA_SUBJECT\" -d \"$VALID_DAYS\" -sn \"$SERIAL_NUMBER\""
         bash +x gen.root.sh $options
+    else
+        echo "######### Root certificate already exists, skip generating root certificate #########"
     fi
 }
 
 # Function to generate the certificate key
 generate_cert_key() {
     # Generate cert key
-    openssl genrsa -out "$SERVER_KEY" 4096
+    openssl genrsa -out "$KEY_FILE" 4096
     echo "Certificate key generated."
 }
 
@@ -66,12 +68,12 @@ generate_csr() {
     SAN="$1"
     if [ -z "$SAN" ]; then
         openssl req -new -out "$CSR_FILE" \
-            -key "$SERVER_KEY" \
+            -key "$KEY_FILE" \
             -config <(cat "$CA_CONFIG") \
             -subj "$CA_SUBJECT"
     else
         openssl req -new -out "$CSR_FILE" \
-            -key "$SERVER_KEY" \
+            -key "$KEY_FILE" \
             -reqexts SAN \
             -config <(cat "$CA_CONFIG" \
                 <(printf "[SAN]\nsubjectAltName=${SAN}")) \
