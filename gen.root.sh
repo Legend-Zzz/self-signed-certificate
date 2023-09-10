@@ -59,7 +59,7 @@ generate_ROOT_CRT_FILE() {
     fi
 
     # Create 'out' directory if it doesn't exist
-    [ ! -d "$OUT_DIR" ] && mkdir -p "$OUT_DIR"
+    [ ! -d "$OUT_DIR" ] && init_out_directory
 
     # Generate root cert along with root key
     openssl req -config "$CA_CONFIG" \
@@ -72,5 +72,4 @@ generate_ROOT_CRT_FILE() {
 
 # Main script execution
 cd "$SCRIPT_DIR"
-init_out_directory
 generate_ROOT_CRT_FILE
