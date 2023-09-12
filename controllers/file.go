@@ -14,7 +14,7 @@ type FileData struct {
 	CreateDate time.Time
 }
 
-func GetFilesAndDates(folderPath string) ([]FileData, error) {
+func getFilesAndDates(folderPath string) ([]FileData, error) {
 	fileDataList := []FileData{}
 
 	err := filepath.Walk(folderPath, func(filePath string, fileInfo os.FileInfo, err error) error {
@@ -41,7 +41,7 @@ func GetFilesAndDates(folderPath string) ([]FileData, error) {
 }
 
 func GetFiles(c *gin.Context, outPath string) {
-	file, err := GetFilesAndDates(outPath)
+	file, err := getFilesAndDates(outPath)
 	if os.IsNotExist(err) {
 		c.HTML(http.StatusOK, "files.html", nil)
 		return
@@ -91,7 +91,7 @@ func DownloadFiles(c *gin.Context, outPath string) {
 	c.File(filePath)
 }
 
-func CreateFilesIfNotPresent(c *gin.Context, fileName string) {
+func createFilesIfNotPresent(c *gin.Context, fileName string) {
 	file, err := os.OpenFile(fileName, os.O_WRONLY|os.O_APPEND|os.O_CREATE, 0644)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "unable to open file"})
@@ -101,7 +101,7 @@ func CreateFilesIfNotPresent(c *gin.Context, fileName string) {
 }
 
 func ViewResult(c *gin.Context, fileName string) {
-	CreateFilesIfNotPresent(c, fileName)
+	createFilesIfNotPresent(c, fileName)
 	Data, err := os.ReadFile(fileName)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "unable to read file"})
@@ -113,7 +113,7 @@ func ViewResult(c *gin.Context, fileName string) {
 }
 
 func WriteFiles(c *gin.Context, content string, fileName string) {
-	CreateFilesIfNotPresent(c, fileName)
+	createFilesIfNotPresent(c, fileName)
 
 	oldData, err := os.ReadFile(fileName)
 	if err != nil {
