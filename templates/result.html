@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Logs</title>
+    <link rel="shortcut icon" href="/static/favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" type="text/css" href="/static/css/styles.css">
+    <style>
+        ul {
+            max-width: 1000px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .no-logs {
+            text-align: center;
+            font-weight: bold;
+            padding: 20px;
+        }
+    </style>
+</head>
+<body>
+<h1>Logs</h1>
+<ul>
+    {{ if .Content }}
+        <pre>{{ .Content }}</pre>
+    {{ else }}
+        <p class="no-logs">No logs are available.</p>
+    {{ end }}
+</ul>
+
+</body>
+</html>

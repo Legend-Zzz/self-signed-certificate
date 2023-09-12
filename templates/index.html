@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generate Certificates</title>
+    <link rel="shortcut icon" href="/static/favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" type="text/css" href="/static/css/styles.css">
+    <style>
+        form {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        label {
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        input[type="text"],
+        input[type="number"],
+        select {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+        }
+
+        input[type="submit"],
+        button {
+            background-color: #3498db;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+
+        select,
+        input[type="submit"],
+        button {
+            font-size: 16px;
+        }
+        .toFilePageButton,
+        .toLogsButton {
+            background-color: #6c757d;
+        }
+    </style>
+    <script>
+        function toggleInputFields() {
+            const selectBox = document.getElementById("selection");
+            const allInput = document.getElementsByClassName("all");
+            const rootOnlyInput = document.getElementsByClassName("rootOnly");
+
+            if (selectBox.value === "all") {
+                for (let i = 0; i < allInput.length; i++) {
+                    allInput[i].style.display = "block";
+                }
+                for (let j = 0; j < rootOnlyInput.length; j++) {
+                    rootOnlyInput[j].style.display = "none";
+                }
+            } else if (selectBox.value === "rootOnly") {
+                for (let k = 0; k < rootOnlyInput.length; k++) {
+                    rootOnlyInput[k].style.display = "block";
+                }
+                for (let l = 0; l < allInput.length; l++) {
+                    allInput[l].style.display = "none";
+                }
+            }
+        }
+
+        function ToFilesPages() {
+            const link = document.createElement('a');
+
+            link.href = '/files';
+
+            link.click();
+        }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            const gotoPageButton = document.getElementById('toFilePageButton');
+
+            gotoPageButton.addEventListener('click', ToFilesPages);
+        });
+        function toLogsButton() {
+            const link = document.createElement('a');
+
+            link.href = '/result';
+
+            link.click();
+        }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            const gotoPageButton = document.getElementById('toLogsButton');
+
+            gotoPageButton.addEventListener('click', toLogsButton);
+        });
+    </script>
+
+</head>
+<body>
+<h1>Generate Certificates</h1>
+<form action="/submit" method="POST">
+    <label for="selection">Select:</label>
+    <select id="selection" name="selection" onchange="toggleInputFields()">
+        <option value="all">Generate all certificates</option>
+        <option value="rootOnly">Generate root certificate only</option>
+    </select><br>
+
+    <div class="all">
+        <label for="domain">Domain(s):</label>
+        <input type="text" id="domain" name="domain"
+               placeholder="Optional parameter, multiple parameters separated by commas, example: test.com,*.zzz.com"><br>
+
+        <label for="ip">IP(s):</label>
+        <input type="text" id="ip" name="ip"
+               placeholder="Optional parameter, multiple parameters separated by commas"><br>
+
+        <label for="caSubject">CA Subject:</label>
+        <input type="text" id="caSubject" name="caSubject"
+               placeholder="Default: /C=CN/ST=Jiangsu/L=Wuxi/O=zzz/OU=zzz/CN=zzz"><br>
+
+        <label for="caValidityDays">CA Validity Days:</label>
+        <input type="number" id="caValidityDays" name="caValidityDays" placeholder="Default: 73000"><br>
+
+        <label for="rootSubject">Root CA Subject:</label>
+        <input type="text" id="rootSubject" name="rootSubject" placeholder="If not specified, same as CA Subject"><br>
+
+        <label for="rootValidityDays">Root CA Validity Days:</label>
+        <input type="number" id="rootValidityDays" name="rootValidityDays"
+               placeholder="If not specified, same as CA Validity Days"><br>
+
+        <label for="serialNumber">Serial Number:</label>
+        <input type="number" id="serialNumber" name="serialNumber" placeholder="Default: 1000"><br>
+    </div>
+    <div class="rootOnly" style="display: none;">
+        <label for="rootOnlySubject">Root CA Subject:</label>
+        <input type="text" id="rootOnlySubject" name="rootOnlySubject"
+               placeholder="Default: /C=CN/ST=Jiangsu/L=Wuxi/O=zzz/OU=zzz/CN=zzz Root CA"><br>
+        <label for="rootOnlyValidityDays">Root CA Validity Days:</label>
+        <input type="number" id="rootOnlyValidityDays" name="rootOnlyValidityDays" placeholder="Default: 73000"><br>
+        <label for="rootOnlySerialNumber">Serial Number:</label>
+        <input type="number" id="rootOnlySerialNumber" name="rootOnlySerialNumber" placeholder="Default: 1000"><br>
+    </div>
+
+    <input type="submit" value="Submit">
+
+    <button type="button" id="toFilePageButton" class="toFilePageButton" onclick="ToFilesPages()">View Files</button>
+
+    <button type="button" id="toLogsButton" class="toLogsButton" onclick="toLogsButton()">View Logs</button>
+
+</form>
+
+</body>
+</html>

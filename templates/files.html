@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generated File List</title>
+    <link rel="shortcut icon" href="/static/favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" type="text/css" href="/static/css/styles.css">
+    <script src="/static/js/scripts.js"></script>
+    <script src="/static/js/clipboard.min.js"></script>
+    <style>
+        ul {
+            max-width: 1000px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        li {
+            margin: 10px 0;
+            padding: 10px;
+            border: 1px solid #ccc;
+            background-color: #f9f9f9;
+            border-radius: 5px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        button {
+            background-color: #3498db;
+            color: #fff;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 3px;
+            cursor: pointer;
+            margin-left: 5px;
+            width: 100px;
+        }
+
+        button[type="button"].view-button {
+            background-color: #337ab7;
+        }
+
+        button[type="button"].download-button {
+            background-color: #5cb85c;
+        }
+
+        button[type="button"].delete-button {
+            background-color: #d9534f;
+        }
+
+        .myModal {
+            background-color: rgba(0, 0, 0, 0.5);
+            align-items: center;
+            justify-content: center;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1000;
+        }
+
+        .modal-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+            padding: 20px;
+            position: relative;
+            width: 800px;
+            max-width: 90%;
+        }
+
+        .close {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            cursor: pointer;
+            font-size: 24px;
+        }
+
+        #file-content {
+            padding: 10px;
+            white-space: pre-wrap;
+            font-family: monospace;
+        }
+
+        #copyButton {
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #6c757d;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .date-info {
+            font-style: italic;
+        }
+
+        .file-name {
+            width: 100px;
+            display: inline-block;
+        }
+
+        .toggleDateInfoVisibility {
+            background-color: #6c757d;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 16px;
+            width: 130px;
+        }
+
+        .no-files {
+            text-align: center;
+            font-weight: bold;
+            padding: 20px;
+        }
+
+    </style>
+</head>
+<body>
+<h1>Generated File List</h1>
+<ul>
+    {{ if .FileList }}
+        {{ range .FileList }}
+            <li>
+                <span class="file-name">{{ .FileName }}</span> 
+                <span class="date-info">Change on: {{ .CreateDate.Format "2006-01-02 15:04:05" }}</span>
+                <div class="button-container">
+                    <button type="button" class="view-button" onclick="viewFile('{{ .FileName }}')">View</button>
+                    <button type="button" class="download-button" onclick="downloadFile('{{ .FileName }}')">Download</button>
+                    <button type="button" class="delete-button" onclick="deleteFile('{{ .FileName }}')">Delete</button>
+                </div>
+            </li>
+        {{ end }}
+        <button type="button" id="toggleDateInfoVisibility" class="toggleDateInfoVisibility" onclick="toggleDateInfoVisibility()">Hide Dates</button>
+    {{ else }}
+        <p class="no-files">No files have been generated yet.</p>
+    {{ end }}
+</ul>
+<div id="myModal" class="myModal" style="display: none;">
+    <div class="modal-content">
+        <span class="close" onclick="closeModal()">&times;</span>
+        <div id="file-content"></div>
+        <button type="button" id="copyButton">Copy</button>
+        <div id="copyStatus"></div>
+    </div>
+</div>
+
+</body>
+</html>

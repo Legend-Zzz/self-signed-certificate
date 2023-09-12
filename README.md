@@ -1,15 +1,44 @@
 # self-signed-certificate
-A script to generate self-signed certificate.
 
-No need to modify any files.
+This project provides a simple web or script-based solution for generating self-signed certificates using the Gin web framework. The generated certificates are stored in the "out" directory under the current working directory. By default, the root certificate is only generated once, and it can be manually deleted from the directory to regenerate it if needed.
 
-The certificate generation directory is the out directory under the current directory. 
-The root certificate is only generated once by default, if it exists. 
-You can manually delete the directory or the root certificate under the directory to regenerate.
+### Example
+
+![index](./images/index.png)
+
+![files](./images/files.png)
+
+![logs](./images/logs.png)
 
 ### Usage
 
-Generate all certificates
+Build Docker Image
+
+```
+docker build -t self-signed-certificate:v1 .
+```
+
+Run Docker Container
+
+```
+docker run --name self-signed-certificate \
+  --restart always \
+  -p 8000:8000 \
+  -d self-signed-certificate:v1
+```
+
+Usage with Kubernetes
+
+```
+# modify self-signed-certificate.yaml
+kubectl -n xxx apply -f self-signed-certificate.yaml
+```
+
+### Appendix
+
+If you don't need to use the Gin web interface, you only need three files: ca.cnf, gen.cert.sh, and gen.root.sh. You don't need to modify any files.
+
+Generate All Certificates
 
 ```
 ./gen.cert.sh -h
@@ -26,7 +55,7 @@ example:
 ./gen.cert.sh -d 'test.com,*.zzz.com' -i '1.1.1.1,192.168.102.60'
 ```
 
-Generate root certificate only
+Generate Root Certificate Only
 
 ```
 ./gen.root.sh -h
@@ -36,12 +65,12 @@ Usage: ./gen.root.sh [-s root ca subject, defalut: /C=CN/ST=Jiangsu/L=Wuxi/O=zzz
          [-sn serial number, default: 1000 ]
 ```
 
-Delete certificate directory
+Delete Certificate Directory
 
 ```
 rm -rf ./out/
 ```
 
-### refer to
+### References
 
 [Fishdrowned/ssl](https://github.com/Fishdrowned/ssl/)
