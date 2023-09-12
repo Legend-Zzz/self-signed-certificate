@@ -16,7 +16,7 @@ RUN apk add openssl bash
 COPY --from=build /app/main .
 COPY templates templates
 COPY static static
-COPY ca.cnf gen.cert.sh gen.root.sh .
+COPY ca.cnf gen.cert.sh gen.root.sh ./
 RUN chmod +x gen.cert.sh gen.root.sh
 
 EXPOSE 8000
