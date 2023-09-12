@@ -14,39 +14,6 @@ type FileData struct {
 	CreateDate time.Time
 }
 
-func CreateFileIfNotPresent(filePath string) error {
-	file, err := os.OpenFile(filePath, os.O_WRONLY|os.O_APPEND|os.O_CREATE, 0644)
-	if err != nil {
-		return err
-	}
-	defer file.Close()
-	return nil
-}
-
-func WriteToFile(filePath string, content string) error {
-	oldData, err := os.ReadFile(filePath)
-	if err != nil {
-		return err
-	}
-
-	file, err := os.OpenFile(filePath, os.O_RDWR|os.O_CREATE, 0644)
-	if err != nil {
-		return err
-	}
-	defer file.Close()
-
-	_, err = file.WriteString(content)
-	if err != nil {
-		return err
-	}
-
-	_, err = file.Write(oldData)
-	if err != nil {
-		return err
-	}
-	return nil
-}
-
 func GetFilesAndDates(folderPath string) ([]FileData, error) {
 	fileDataList := []FileData{}
 
