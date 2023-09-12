@@ -15,7 +15,7 @@ type FileData struct {
 }
 
 func getFilesAndDates(folderPath string) ([]FileData, error) {
-	fileDataList := []FileData{}
+	fileDataList := make([]FileData, 0)
 
 	err := filepath.Walk(folderPath, func(filePath string, fileInfo os.FileInfo, err error) error {
 		if err != nil {
@@ -91,17 +91,25 @@ func DownloadFiles(c *gin.Context, outPath string) {
 	c.File(filePath)
 }
 
-func createFilesIfNotPresent(c *gin.Context, fileName string) {
+func createFilesIfNotPresent(c *gin.Context, fileName string) error {
 	file, err := os.OpenFile(fileName, os.O_WRONLY|os.O_APPEND|os.O_CREATE, 0644)
+	if err != nil {
+		return err
+	}
+	defer func() {
+		if err := file.Close(); err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "unable to close file"})
+		}
+	}()
+	return nil
+}
+
+func ViewResult(c *gin.Context, fileName string) {
+	err := createFilesIfNotPresent(c, fileName)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "unable to open file"})
 		return
 	}
-	defer file.Close()
-}
-
-func ViewResult(c *gin.Context, fileName string) {
-	createFilesIfNotPresent(c, fileName)
 	Data, err := os.ReadFile(fileName)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "unable to read file"})
@@ -113,7 +121,11 @@ func ViewResult(c *gin.Context, fileName string) {
 }
 
 func WriteFiles(c *gin.Context, content string, fileName string) {
-	createFilesIfNotPresent(c, fileName)
+	err := createFilesIfNotPresent(c, fileName)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "unable to open file"})
+		return
+	}
 
 	oldData, err := os.ReadFile(fileName)
 	if err != nil {
@@ -126,7 +138,11 @@ func WriteFiles(c *gin.Context, content string, fileName string) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "unable to open file"})
 		return
 	}
-	defer file.Close()
+	defer func() {
+		if err := file.Close(); err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "unable to close file"})
+		}
+	}()
 
 	_, err = file.Write([]byte(content))
 	if err != nil {
