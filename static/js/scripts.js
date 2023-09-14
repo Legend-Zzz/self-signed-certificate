@@ -34,7 +34,7 @@ function toggleDateInfoVisibility() {
 
 function openModal() {
     const modal = document.getElementById('myModal');
-    modal.style.display = 'flex';
+    modal.style.display = 'grid';
 }
 
 function closeModal() {
