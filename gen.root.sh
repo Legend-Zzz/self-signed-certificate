@@ -21,15 +21,26 @@ ATTR_FILE="$OUT_DIR/index.txt.attr"
 SERIAL_FILE="$OUT_DIR/serial"
 
 # Process command line arguments
-while getopts "s:d:sn:" opt; do
-  case "$opt" in
-    -s|--subject) ROOT_CA_SUBJECT="$OPTARG";;
-    -d|--valid-days) VALID_DAYS="$OPTARG";;
-    -sn|--serial-number) SERIAL_NUMBER="$OPTARG";;
-    \?) echo "Usage: $0 [-s root ca subject, defalut: $DEFAULT_ROOT_CA_SUBJECT ] 
-         [-d validity days, default: $DEFAULT_VALID_DAYS ] 
-         [-sn serial number, default: $DEFAULT_SERIAL_NUMBER ]" >&2
-        exit 1;;
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    -s|--subject)
+      ROOT_CA_SUBJECT="$2"
+      shift 2
+      ;;
+    -d|--valid-days)
+      VALID_DAYS="$2"
+      shift 2
+      ;;
+    -sn|--serial-number)
+      SERIAL_NUMBER="$2"
+      shift 2
+      ;;
+    *)
+      echo "Usage: $0 [-s root ca subject, default: $DEFAULT_ROOT_CA_SUBJECT ]
+       [-d validity days, default: $DEFAULT_VALID_DAYS ]
+       [-sn serial number, default: $DEFAULT_SERIAL_NUMBER ]" >&2
+       exit 1
+       ;;
   esac
 done
 
@@ -62,5 +73,5 @@ generate_ROOT_CRT_FILE() {
 }
 
 # Main script execution
-cd "$SCRIPT_DIR"
+cd "$SCRIPT_DIR" || exit
 generate_ROOT_CRT_FILE

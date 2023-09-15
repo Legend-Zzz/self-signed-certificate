@@ -29,8 +29,8 @@ file_exists() {
 # Function to generate root certificate
 generate_root_cert() {
     if ! file_exists "$ROOT_CRT_FILE" && ! file_exists "$ROOT_KEY_FILE"; then
-        local options="-s \"$ROOT_CA_SUBJECT\" -d \"$VALID_DAYS\" -sn \"$SERIAL_NUMBER\""
-        bash +x gen.root.sh $options
+        local options="-s \"$ROOT_CA_SUBJECT\" -d \"$ROOT_VALID_DAYS\" -sn \"$SERIAL_NUMBER\""
+        bash +x gen.root.sh "$options"
     else
         echo "######### Root certificate already exists, skip generating root certificate #########"
     fi
@@ -134,12 +134,12 @@ while [[ $# -gt 0 ]]; do
       shift 2
       ;;
     *)
-      echo "Usage: $0 [-d domain, optional parameter, multiple parameters separated by commas ] 
-       [-i ip, optional parameter, multiple parameters separated by commas ] 
-       [-s ca subject, defalut: $DEFAULT_CA_SUBJECT ] 
-       [-D ca validity days, default: $DEFAULT_VALID_DAYS ] 
-       [-rs root ca subject, If not specified same to -s ] 
-       [-rD root ca validity days, If not specified same to -D ] 
+      echo "Usage: $0 [-d domain, optional parameter, multiple parameters separated by commas ]
+       [-i ip, optional parameter, multiple parameters separated by commas ]
+       [-s ca subject, default: $DEFAULT_CA_SUBJECT ]
+       [-D ca validity days, default: $DEFAULT_VALID_DAYS ]
+       [-rs root ca subject, If not specified same to -s ]
+       [-rD root ca validity days, If not specified same to -D ]
        [-sn serial number, default: $DEFAULT_SERIAL_NUMBER ]" >&2
       exit 1
       ;;
@@ -149,7 +149,7 @@ done
 
 
 # Main script execution
-cd "$SCRIPT_DIR"
+cd "$SCRIPT_DIR" || exit
 
 # Generate root certificate
 generate_root_cert

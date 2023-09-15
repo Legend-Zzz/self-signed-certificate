@@ -136,20 +136,22 @@
 <h1>Generated File List</h1>
 <ul>
     {{ if .FileList }}
-        {{ range .FileList }}
-            <li>
-                <span class="file-name">{{ .FileName }}</span> 
-                <span class="date-info">Change on: {{ .CreateDate.Format "2006-01-02 15:04:05" }}</span>
-                <div class="button-container">
-                    <button type="button" class="view-button" onclick="viewFile('{{ .FileName }}')">View</button>
-                    <button type="button" class="download-button" onclick="downloadFile('{{ .FileName }}')">Download</button>
-                    <button type="button" class="delete-button" onclick="deleteFile('{{ .FileName }}')">Delete</button>
-                </div>
-            </li>
-        {{ end }}
-        <button type="button" id="toggleDateInfoVisibility" class="toggleDateInfoVisibility" onclick="toggleDateInfoVisibility()">Hide Dates</button>
+    {{ range .FileList }}
+    <li>
+        <span class="file-name">{{ .FileName }}</span>
+        <span class="date-info">Change on: {{ .CreateDate.Format "2006-01-02 15:04:05" }}</span>
+        <div class="button-container">
+            <button type="button" class="view-button" onclick="viewFile('{{ .FileName }}')">View</button>
+            <button type="button" class="download-button" onclick="downloadFile('{{ .FileName }}')">Download</button>
+            <button type="button" class="delete-button" onclick="deleteFile('{{ .FileName }}')">Delete</button>
+        </div>
+    </li>
+    {{ end }}
+    <button type="button" id="toggleDateInfoVisibility" class="toggleDateInfoVisibility"
+            onclick="toggleDateInfoVisibility()">Hide Dates
+    </button>
     {{ else }}
-        <p class="no-files">No files have been generated yet.</p>
+    <p class="no-files">No files have been generated yet.</p>
     {{ end }}
 </ul>
 <div id="myModal" class="myModal" style="display: none;">

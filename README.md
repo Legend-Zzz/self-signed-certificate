@@ -1,6 +1,9 @@
 # self-signed-certificate
 
-This project provides a simple web or script-based solution for generating self-signed certificates using the Gin web framework. The generated certificates are stored in the "out" directory under the current working directory. By default, the root certificate is only generated once, and it can be manually deleted from the directory to regenerate it if needed.
+This project provides a simple web or script-based solution for generating self-signed certificates using the Gin web
+framework. The generated certificates are stored in the "out" directory under the current working directory. By default,
+the root certificate is only generated once, and it can be manually deleted from the directory to regenerate it if
+needed.
 
 ### Example
 
@@ -36,7 +39,8 @@ kubectl -n xxx apply -f self-signed-certificate.yaml
 
 ### Appendix
 
-If you don't need to use the Gin web interface, you only need three files: ca.cnf, gen.cert.sh, and gen.root.sh. You don't need to modify any files.
+If you don't need to use the Gin web interface, you only need three files: ca.cnf, gen.cert.sh, and gen.root.sh. You
+don't need to modify any files.
 
 Generate All Certificates
 
