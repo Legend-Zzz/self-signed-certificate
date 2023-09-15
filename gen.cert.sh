@@ -7,7 +7,9 @@ DEFAULT_SERIAL_NUMBER=1000
 
 # Define variables with default values
 CA_SUBJECT="$DEFAULT_CA_SUBJECT"
+ROOT_CA_SUBJECT="$DEFAULT_CA_SUBJECT"
 VALID_DAYS="$DEFAULT_VALID_DAYS"
+ROOT_VALID_DAYS="$DEFAULT_VALID_DAYS"
 SERIAL_NUMBER="$DEFAULT_SERIAL_NUMBER"
 
 # Define other variables
@@ -29,7 +31,7 @@ file_exists() {
 # Function to generate root certificate
 generate_root_cert() {
     if ! file_exists "$ROOT_CRT_FILE" && ! file_exists "$ROOT_KEY_FILE"; then
-        local options="-s \"$ROOT_CA_SUBJECT\" -d \"$ROOT_VALID_DAYS\" -sn \"$SERIAL_NUMBER\""
+        local options="-s $ROOT_CA_SUBJECT -d $ROOT_VALID_DAYS -sn $SERIAL_NUMBER"
         bash +x gen.root.sh "$options"
     else
         echo "######### Root certificate already exists, skip generating root certificate #########"
