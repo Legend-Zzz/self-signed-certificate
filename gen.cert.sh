@@ -28,7 +28,7 @@ file_exists() {
 
 # Function to generate root certificate
 generate_root_cert() {
-    if ! file_exists "$ROOT_CRT_FILE"; then
+    if ! file_exists "$ROOT_CRT_FILE" && ! file_exists "$ROOT_KEY_FILE"; then
         local options="-s \"$ROOT_CA_SUBJECT\" -d \"$VALID_DAYS\" -sn \"$SERIAL_NUMBER\""
         bash +x gen.root.sh $options
     else
