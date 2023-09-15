@@ -34,7 +34,7 @@ func generateCommand(data interface{}) (string, error) {
 	case *RootFormData:
 		cmd = "./gen.root.sh"
 		if v.RootOnlySubject != "" {
-			cmd += " -s " + v.RootOnlySubject
+			cmd += " -s \"" + v.RootOnlySubject + "\""
 		}
 		if v.RootOnlyValidityDays != 0 {
 			cmd += " -d " + strconv.Itoa(v.RootOnlyValidityDays)
@@ -51,13 +51,13 @@ func generateCommand(data interface{}) (string, error) {
 			cmd += " -i " + v.IP
 		}
 		if v.CASubject != "" {
-			cmd += " -s " + v.CASubject
+			cmd += " -s \"" + v.CASubject + "\""
 		}
 		if v.CAValidityDays != 0 {
 			cmd += " -D " + strconv.Itoa(v.CAValidityDays)
 		}
 		if v.RootSubject != "" {
-			cmd += " -rs " + v.RootSubject
+			cmd += " -rs \"" + v.RootSubject + "\""
 		}
 		if v.RootValidityDays != 0 {
 			cmd += " -rD " + strconv.Itoa(v.RootValidityDays)
