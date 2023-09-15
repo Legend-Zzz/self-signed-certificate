@@ -33,18 +33,6 @@ while getopts "s:d:sn:" opt; do
   esac
 done
 
-# Function to init 'out' directory if it doesn't exist
-init_out_directory() {
-    if [ ! -d "$OUT_DIR" ]; then
-        echo "Creating output structure"
-        mkdir -p "$OUT_DIR/newcerts"
-        touch "$INDEX_FILE"
-        echo "unique_subject = no" > "$ATTR_FILE"
-        echo "$SERIAL_NUMBER" > "$SERIAL_FILE"
-        echo "Done"
-    fi
-}
-
 # Function to check if a file exists
 file_exists() {
     [ -f "$1" ]
@@ -53,13 +41,16 @@ file_exists() {
 # Function to generate the root certificate and key
 generate_ROOT_CRT_FILE() {
     # Check if root certificate already exists
-    if file_exists "$ROOT_CRT_FILE"; then
+    if file_exists "$ROOT_CRT_FILE" && file_exists "ROOT_KEY_FILE"; then
         echo "######### Root certificate already exists, skip generating root certificate #########"
         return
     fi
 
-    # Create 'out' directory if it doesn't exist
-    [ ! -d "$OUT_DIR" ] && init_out_directory
+    # Init 'out' directory if some files doesn't exist
+    mkdir -p "$OUT_DIR/newcerts"
+    file_exists "$INDEX_FILE" && touch "$INDEX_FILE"
+    file_exists "$ATTR_FILE" && echo "unique_subject = no" > "$ATTR_FILE"
+    file_exists "$SERIAL_FILE" && echo "$SERIAL_NUMBER" > "$SERIAL_FILE"
 
     # Generate root cert along with root key
     openssl req -config "$CA_CONFIG" \
