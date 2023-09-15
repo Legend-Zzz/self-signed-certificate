@@ -48,9 +48,9 @@ generate_ROOT_CRT_FILE() {
 
     # Init 'out' directory if some files doesn't exist
     mkdir -p "$OUT_DIR/newcerts"
-    file_exists "$INDEX_FILE" && touch "$INDEX_FILE"
-    file_exists "$ATTR_FILE" && echo "unique_subject = no" > "$ATTR_FILE"
-    file_exists "$SERIAL_FILE" && echo "$SERIAL_NUMBER" > "$SERIAL_FILE"
+    ! file_exists "$INDEX_FILE" && touch "$INDEX_FILE"
+    ! file_exists "$ATTR_FILE" && echo "unique_subject = no" > "$ATTR_FILE"
+    ! file_exists "$SERIAL_FILE" && echo "$SERIAL_NUMBER" > "$SERIAL_FILE"
 
     # Generate root cert along with root key
     openssl req -config "$CA_CONFIG" \
